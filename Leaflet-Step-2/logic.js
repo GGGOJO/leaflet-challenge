@@ -64,12 +64,10 @@ L
     }).addTo(myMap);
 
 // Perform API call to USGS API to get earthquake data
-let link = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
-
-d3.json(link).then(function (data) {
+d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson", function (data) {
     console.log(data)
 
-    function styleInfo(feature) {
+    function styleInfo(features) {
         return {
             opacity: 1,
             fillOpacity: 1,
@@ -119,7 +117,7 @@ d3.json(link).then(function (data) {
         style: styleInfo,
 
         // Set up a Popup for each marker with the info of magnitude and location
-        onEachFeature: function (feature, layer) {
+        onEachFeature: function (features, layer) {
             layer.bindPopup(
                 "Magnitude: "
                 + features.properties.mag
@@ -150,6 +148,7 @@ d3.json(link).then(function (data) {
             "lightsalmon",
             "tomato"
         ];
+        div.innerHTML += "<text>Depth of Earthquake " + "<br>" + "(in miles)</text><br>";
 
         // loop through the intervals and generate a label with a colored square for each interval
         for (let index = 0; index < grades.length; index++) {
@@ -165,7 +164,7 @@ d3.json(link).then(function (data) {
     // Add the legend to the map
     legend.addTo(myMap);
 
-    d3.json("https://github.com/fraxen/tectonicplates/blob/master/GeoJSON/PB2002_boundaries.json").then(function (plateData) {
+    d3.json("https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json", function (plateData) {
         // Adding the geoJSON data, along with the style information, to the tectonicplates layer
         L.geoJson(plateData, {
             color: "orange",
@@ -173,27 +172,6 @@ d3.json(link).then(function (data) {
         }).addTo(tectonicPlates);
 
         // Add tectonicplates layer to the map
-        tectonicPlates.addTo(map);
+        tectonicPlates.addTo(myMap);
     });
 });
-
-// var legend = L.control({position: 'topleft'});
-//     legend.onAdd = function (map) {
-
-//     var div = L.DomUtil.create('div', 'info legend'),
-//         grades = [50, 100, 150, 200, 250, 300],
-//         labels = ['<strong> THE TITLE </strong>'],
-//         from, to;
-
-//     for (var i = 0; i < grades.length; i++) {
-//         from = grades [i];
-//         to = grades[i+1]-1;
-
-//     labels.push(
-//         '<i style="background:' + getColor(from + 1) + '"></i> ' +
-//         from + (to ? '&ndash;' + to : '+'));
-//         }
-//         div.innerHTML = labels.join('<br>');
-//         return div;
-
-        // };
